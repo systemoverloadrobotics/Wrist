@@ -128,8 +128,8 @@ public class RobotContainer {
   }
   public void scoreL1(){
     wrist.setWristPosition(0);
-    pivot.setPivotPosition(Degrees.of(50));
-    elevator.setElevatorPosition(0.3);
+    pivot.setPivotPosition(Degrees.of(0));
+    elevator.setElevatorPosition(2);
   }
   public void scoreL2(){
     wrist.setWristPosition(90);
