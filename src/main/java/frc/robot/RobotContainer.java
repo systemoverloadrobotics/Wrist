@@ -127,14 +127,19 @@ public class RobotContainer {
     }
   }
   public void scoreL1(){
-    wrist.setWristPosition(0);
-    pivot.setPivotPosition(Degrees.of(0));
-    elevator.setElevatorPosition(2);
+    if (isIntaking) {
+      wrist.setWristPosition(0);
+      pivot.setPivotPosition(Degrees.of(0));
+      elevator.setElevatorPosition(2);
   }
+    } 
+    
   public void scoreL2(){
-    wrist.setWristPosition(90);
-    pivot.setPivotPosition(Degrees.of(75));
-    elevator.setElevatorPosition(1);
+    if (isIntaking){
+      wrist.setWristPosition(90);
+      pivot.setPivotPosition(Degrees.of(75));
+      elevator.setElevatorPosition(1);
+  }
   }
 }
 
