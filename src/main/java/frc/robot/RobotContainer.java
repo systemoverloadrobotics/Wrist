@@ -88,10 +88,10 @@ public class RobotContainer {
     joystick.a().whileFalse(Commands.runOnce(RobotContainer.this::goToHold));
 
     joystick.b().onTrue(Commands.runOnce(RobotContainer.this::scoreL1));
-    joystick.b().onFalse(Commands.runOnce(RobotContainer.this::scoreL1));
+    
 
     joystick.x().onTrue(Commands.runOnce(RobotContainer.this::scoreL2));
-    joystick.x().onFalse(Commands.runOnce(RobotContainer.this::scoreL2));
+    
 
     joystick.a().onTrue(Commands.runOnce(() -> {
       isIntaking = true;
