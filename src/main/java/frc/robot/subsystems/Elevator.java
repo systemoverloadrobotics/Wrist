@@ -34,7 +34,7 @@ public class Elevator extends SubsystemBase {
 
     private final CANBus kCANBus = new CANBus("rio");
 
-    private final PositionVoltage elevatorPosReq;
+    private final PositionVoltage elevatorPosReq; // Creates Position Voltage Request
 
     public Elevator() {
         elevatorMotor1 = new TalonFX(Constants.Elevator.motorId1);
