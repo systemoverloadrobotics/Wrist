@@ -82,9 +82,16 @@ public class RobotContainer {
     //   wrist.setWristPosition(0.0); // Set to 0 degrees from the origin
     // }));
 
+
     joystick.a().whileTrue(Commands.runOnce(RobotContainer.this::goToIntake));
 
     joystick.a().whileFalse(Commands.runOnce(RobotContainer.this::goToHold));
+
+    joystick.b().onTrue(Commands.runOnce(RobotContainer.this::scoreL1));
+    joystick.b().onFalse(Commands.runOnce(RobotContainer.this::scoreL1));
+
+    joystick.x().onTrue(Commands.runOnce(RobotContainer.this::scoreL2));
+    joystick.x().onFalse(Commands.runOnce(RobotContainer.this::scoreL2));
 
     joystick.a().onTrue(Commands.runOnce(() -> {
       isIntaking = true;
@@ -119,4 +126,15 @@ public class RobotContainer {
       elevator.setElevatorPosition(0.2);
     }
   }
+  public void scoreL1(){
+    wrist.setWristPosition(0);
+    pivot.setPivotPosition(Degrees.of(50));
+    elevator.setElevatorPosition(0.3);
+  }
+  public void scoreL2(){
+    wrist.setWristPosition(90);
+    pivot.setPivotPosition(Degrees.of(75));
+    elevator.setElevatorPosition(1);
+  }
 }
+
