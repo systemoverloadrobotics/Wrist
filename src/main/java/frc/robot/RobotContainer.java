@@ -4,20 +4,18 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Wrist;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Elevator;
-
 import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Wrist;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -82,16 +80,16 @@ public class RobotContainer {
     //   wrist.setWristPosition(0.0); // Set to 0 degrees from the origin
     // }));
 
-    joystick.a().whileTrue(Commands.runOnce(RobotContainer.this::goToIntake));
+    // use left bumper for intake and hold
+    joystick.leftBumper().whileTrue(Commands.runOnce(RobotContainer.this::goToIntake));
+    joystick.leftBumper().whileFalse(Commands.runOnce(RobotContainer.this::goToHold));
+    joystick.leftBumper().onTrue(Commands.runOnce(() -> isIntaking = true));
 
-    joystick.a().whileFalse(Commands.runOnce(RobotContainer.this::goToHold));
-
-    joystick.a().onTrue(Commands.runOnce(() -> {
-      isIntaking = true;
-    }));
-
-   
-
+    // use a, b, x and y for l1, l2, l3 and l4 scoring respectively 
+    joystick.a().onTrue(Commands.runOnce(RobotContainer.this::moveL1));
+    joystick.b().onTrue(Commands.runOnce(RobotContainer.this::moveL2));
+    joystick.x().onTrue(Commands.runOnce(RobotContainer.this::moveL3));
+    joystick.y().onTrue(Commands.runOnce(RobotContainer.this::moveL3));
   }
 
   /**
@@ -119,4 +117,31 @@ public class RobotContainer {
       elevator.setElevatorPosition(0.2);
     }
   }
+  public void moveL1() {
+    wrist.setWristPosition(0.5);
+    pivot.setPivotPosition(75);
+    elevator.setElevatorPosition(0.4);
+    
+  }
+  public void moveL2() {
+    wrist.setWristPosition(0.5);
+    pivot.setPivotPosition(75);
+    elevator.setElevatorPosition(0.6);
+  }
+
+  public void moveL3() {
+    wrist.setWristPosition(0.5);
+    pivot.setPivotPosition(75);
+    elevator.setElevatorPosition(0.8);
+
+  }
+
+  public void moveL4() {
+    wrist.setWristPosition(0.5);
+    pivot.setPivotPosition(75);
+    elevator.setElevatorPosition(0.9);
+
+  }
+
+  
 }
