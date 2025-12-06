@@ -22,20 +22,35 @@ public final class Constants {
   }
 
   public static class Wrist {
-    public static final int motorId = 13;
+    public static final int wristId = 13;
     public static final int CANcoderId = 14;
-    public static final int supplyCurrentLimit = 30;
+    public static final double supplyCurrentLimit = 30.0;
+    public static final double kP = 18;
+    public static final double kI = 3.5;
+    public static final double kD = 0.0;
+    public static final double sensorToMechanismRatio = 5.583;
+    public static final double CANCoderOffset = 0.0977777;
   }
 
   public static class Pivot {
-    public static final int pivotId = -1;
-    public static final int CANcoderId = -1;
+    public static final int pivotId = 12;
+    // public static final int CANcoderId = -1;
+    public static final int encoderChannel = 5;
+    public static final double pivotOfffset =  -0.4568;
+    public static final double kP = 15;
+    public static final double kI = 0;
+    public static final double kD = 0.5;
+    public static final double sensorToMechanismRatio = 30;
+    public static final double supplyCurrentLimit = 40.0;
   }
 
   public static class Elevator {
-    public static final int motorId1 = 17;
-    public static final int motorId2 = 18;
-    public static final int CANcoderId = 19;
-    public static final int supplyCurrentLimit = 10;
+    public static final int leftMotorId = 10;
+    public static final int rightMotorId = 11;
+    public static final double supplyCurrentLimit = 60.0;
+    public static final double kP = 15;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double sensorToMechanismRatio = 12;
   }
 }

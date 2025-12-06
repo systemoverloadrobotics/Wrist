@@ -25,87 +25,76 @@ import frc.robot.Constants;
 public class Elevator extends SubsystemBase {
 
     // create elevator motors that move the elevator up and down in sync
-    private final TalonFX elevatorMotor1;
+    private final TalonFX leftMotor;
 
-    private final TalonFX elevatorMotor2;
+    private final TalonFX rightMotor;
 
     // Absolute encoder
-    private final CANcoder elevatorCANcoder;
-
     private final CANBus kCANBus = new CANBus("rio");
 
     private final PositionVoltage elevatorPosReq; 
 
     public Elevator() {
-        elevatorMotor1 = new TalonFX(Constants.Elevator.motorId1);
-        elevatorMotor2 = new TalonFX(Constants.Elevator.motorId2);
-        elevatorCANcoder = new CANcoder(Constants.Elevator.CANcoderId, kCANBus);
+        leftMotor = new TalonFX(Constants.Elevator.leftMotorId, kCANBus);
+        rightMotor = new TalonFX(Constants.Elevator.rightMotorId, kCANBus);
         elevatorPosReq = new PositionVoltage(0); // Initializes wrist position request
 
         Slot0Configs slot0Configs = new Slot0Configs(); // Creates slot 0 configuration
         slot0Configs
-                .withKP(5) // Adjusts time it takes to reach goal
-                .withKI(0) // Fixes issue with kP not reaching goal because of equally opposing forces
-                .withKD(0.5); // If overshoots because of kI, add kD
+                .withKP(Constants.Elevator.kP) // Adjusts time it takes to reach goal
+                .withKI(Constants.Elevator.kI) // Fixes issue with kP not reaching goal because of equally opposing forces
+                .withKD(Constants.Elevator.kD); // If overshoots because of kI, add kD
 
         // slot0Configs.kP = 10;
-        var MOCElevator1 = new MotorOutputConfigs()
+        var leftMotorMOC = new MotorOutputConfigs()
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInverted(InvertedValue.CounterClockwise_Positive);
 
         // Motor Output Configuration for MOTOR 2 (follower, opposite inversion)
-        var MOCElevator2 = new MotorOutputConfigs()
+        var rightMotorMOC = new MotorOutputConfigs()
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInverted(InvertedValue.Clockwise_Positive); // Opposite of motor 1!
 
         // Configuration for Motor 1 (Leader)
-        TalonFXConfiguration elevatorConfig1 = new TalonFXConfiguration();
-        elevatorConfig1
+        TalonFXConfiguration leftElevatorConfig = new TalonFXConfiguration()
                 .withFeedback(new FeedbackConfigs()
-                        .withSensorToMechanismRatio(5.583) // VERIFY THIS RATIO!
+                        .withSensorToMechanismRatio(Constants.Elevator.sensorToMechanismRatio)
                         .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor))
                 .withCurrentLimits(new CurrentLimitsConfigs()
                         .withSupplyCurrentLimitEnable(true)
-                        .withSupplyCurrentLimit(Constants.Elevator.supplyCurrentLimit)) // FIXED!
+                        .withSupplyCurrentLimit(Constants.Elevator.supplyCurrentLimit))
                 .withSlot0(slot0Configs)
-                .withMotorOutput(MOCElevator1);
+                .withMotorOutput(leftMotorMOC);
 
         // Configuration for Motor 2 (Follower)
-        TalonFXConfiguration elevatorConfig2 = new TalonFXConfiguration();
-        elevatorConfig2
+        TalonFXConfiguration rightElevatorConfig = new TalonFXConfiguration()
                 .withCurrentLimits(new CurrentLimitsConfigs()
                         .withSupplyCurrentLimitEnable(true)
                         .withSupplyCurrentLimit(Constants.Elevator.supplyCurrentLimit))
-                .withMotorOutput(MOCElevator2);
+                .withMotorOutput(rightMotorMOC);
 
-        elevatorMotor1.getConfigurator().apply(elevatorConfig1);
-        elevatorMotor2.getConfigurator().apply(elevatorConfig2);
+        leftMotor.getConfigurator().apply(leftElevatorConfig);
+        rightMotor.getConfigurator().apply(rightElevatorConfig);
 
         // Set motor 2 to follow motor 1
         // elevatorMotor2.setControl(new Follower(Constants.Elevator.motorId1, false));
 
-        CANcoderConfiguration elevatorCANcoderConfig = new CANcoderConfiguration(); // Creates elevator encoder
-                                                                                    // configuration
-        elevatorCANcoderConfig.MagnetSensor = new MagnetSensorConfigs().withMagnetOffset(0.0977777);
-        elevatorCANcoder.getConfigurator().apply(elevatorCANcoderConfig);
-
         // Absolute encoder position -> internal encoder for elevator
         // Set initial position from absolute encoder
-        double encodePos = elevatorCANcoder.getAbsolutePosition().getValueAsDouble();
-        elevatorMotor1.setPosition(encodePos);
-        elevatorMotor2.setPosition(encodePos);
+        leftMotor.setPosition(0);
+        rightMotor.setPosition(leftMotor.getPosition().getValueAsDouble());
     }
 
     public void setElevatorPosition(double position) {
         // Between -0.5 and 0.5 rotations; (?) --> should be between min and max height
         // Only control motor 1 - motor 2 follows automatically
-        elevatorMotor1.setControl(elevatorPosReq.withPosition(position));
-        elevatorMotor2.setControl(elevatorPosReq.withPosition(position));
+        leftMotor.setControl(elevatorPosReq.withPosition(position));
+        rightMotor.setControl(elevatorPosReq.withPosition(position));
     }
 
     public void setElevatorPosition(Angle position) {
         // Only control motor 1 - motor 2 follows automatically
-        elevatorMotor1.setControl(elevatorPosReq.withPosition(position));
-        elevatorMotor2.setControl(elevatorPosReq.withPosition(position));
+        leftMotor.setControl(elevatorPosReq.withPosition(position));
+        rightMotor.setControl(elevatorPosReq.withPosition(position));
     }
 }

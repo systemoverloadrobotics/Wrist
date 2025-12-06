@@ -30,7 +30,7 @@ public class Wrist extends SubsystemBase {
   private final PositionVoltage wristPosReq;
 
   public Wrist() {
-    wristMotor = new TalonFX(Constants.Wrist.motorId); // Initializes wrist motor
+    wristMotor = new TalonFX(Constants.Wrist.wristId); // Initializes wrist motor
     wristCANcoder = new CANcoder(Constants.Wrist.CANcoderId, kCANBus); // Initializes wrist encoder
     wristPosReq = new PositionVoltage(0); // Initializes wrist position request
 
@@ -43,7 +43,7 @@ public class Wrist extends SubsystemBase {
         .withInverted(InvertedValue.CounterClockwise_Positive);
 
     TalonFXConfiguration wristConfig = new TalonFXConfiguration() // Creates wrist motor configuration
-        .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(5.583)
+        .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(Constants.Wrist.sensorToMechanismRatio)
             .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor))// ratio between motor and
                                                                              // wrist
         .withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true)
@@ -55,7 +55,7 @@ public class Wrist extends SubsystemBase {
 
     CANcoderConfiguration wristCANcoderConfig = new CANcoderConfiguration(); // Creates wrist encoder configuration
     wristCANcoderConfig.MagnetSensor = new MagnetSensorConfigs()
-        .withMagnetOffset(0.0977777);
+        .withMagnetOffset(Constants.Wrist.CANCoderOffset);
     wristCANcoder.getConfigurator().apply(wristCANcoderConfig);
     // Absolute encoder position -> internal encoder for wrist
     wristMotor.setPosition(wristCANcoder.getAbsolutePosition().getValueAsDouble());

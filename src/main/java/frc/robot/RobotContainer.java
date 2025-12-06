@@ -90,7 +90,7 @@ public class RobotContainer {
       isIntaking = true;
     }));
 
-   
+    joystick.b().onTrue(Commands.runOnce(RobotContainer.this::goToL1));
 
   }
 
@@ -102,6 +102,21 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+
+  public void goToL2() {
+    isIntaking = false;
+    elevator.setElevatorPosition(3);
+    pivot.setPivotPosition(Degrees.of(45));
+    wrist.setWristPosition(0.5);
+
+  }
+
+  public void goToL1() {
+    isIntaking = false;
+    elevator.setElevatorPosition(2);
+    pivot.setPivotPosition(Degrees.of(10));
+    wrist.setWristPosition(0);
   }
 
   public void goToIntake() {
