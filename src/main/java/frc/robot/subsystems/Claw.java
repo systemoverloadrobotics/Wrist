@@ -8,12 +8,14 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,16 +24,14 @@ public class Claw extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
 private final TalonFX clawMotor; // Creating TalonFX motor
-private final CANcoder clawCANcoder; // Creating claw encoder
- private final CANBus kCANBus = new CANBus("rio"); // Creates CANBus
-private final PositionVoltage clawPosReq; // Creates Position Voltage Request
+private final CANBus kCANBus = new CANBus("rio"); // Creates CANBus
+private final DutyCycleOut clawPosReq; // Creates Position Voltage Request
 
 
   public Claw() {
 
     clawMotor = new TalonFX(Constants.Claw.motorId, kCANBus);
-    clawCANcoder = new CANcoder(Constants.Claw.CANcoderId, kCANBus);
-    clawPosReq = new PositionVoltage(0);
+    clawPosReq = new DutyCycleOut(0);
 
     var MOCClaw = new MotorOutputConfigs() // Creates motor output configuration
         .withNeutralMode(NeutralModeValue.Brake)
@@ -45,14 +45,18 @@ private final PositionVoltage clawPosReq; // Creates Position Voltage Request
 
     
     }
+    public void setSpeed(double speed) {
+      clawMotor.setControl(clawPosReq.withOutput(speed));
+      
+    }
   /**
    * Example command factory method.
    *
    * @return a command
    */
   public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
+
+   
     return runOnce(
         () -> {
           /* one-time action goes here */
