@@ -82,16 +82,18 @@ public class RobotContainer {
     //   wrist.setWristPosition(0.0); // Set to 0 degrees from the origin
     // }));
 
-    joystick.a().whileTrue(Commands.runOnce(RobotContainer.this::goToIntake));
+    joystick.povUp().whileTrue(Commands.runOnce(RobotContainer.this::goToIntake)); // Go to intake position while POV up is held
 
-    joystick.a().whileFalse(Commands.runOnce(RobotContainer.this::goToHold));
+    joystick.povUp().whileFalse(Commands.runOnce(RobotContainer.this::goToHold)); // Go to hold position while POV up is not held
 
-    joystick.a().onTrue(Commands.runOnce(() -> {
-      isIntaking = true;
+    joystick.povUp().onTrue(Commands.runOnce(() -> {
+      isIntaking = true; // Set isIntaking to true when POV up is pressed
     }));
 
-    joystick.b().onTrue(Commands.runOnce(RobotContainer.this::goToL1));
-
+    joystick.a().onTrue(Commands.runOnce(RobotContainer.this::goToL2)); // Bind L2 to A button
+    joystick.b().onTrue(Commands.runOnce(RobotContainer.this::goToL1)); // Bind L1 to B button
+    joystick.x().onTrue(Commands.runOnce(RobotContainer.this::goToL3)); // Bind L3 to X button
+    joystick.y().onTrue(Commands.runOnce(RobotContainer.this::goToL4)); // Bind L4 to Y button
   }
 
   /**
@@ -102,6 +104,20 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+  
+  public void goToL4() {
+    isIntaking = false;
+    elevator.setElevatorPosition(5);
+    pivot.setPivotPosition(Degrees.of(80));
+    wrist.setWristPosition(0.5);
+  }
+
+  public void goToL3() {
+    isIntaking = false;
+    elevator.setElevatorPosition(4);
+    pivot.setPivotPosition(Degrees.of(60));
+    wrist.setWristPosition(0.5);
   }
 
   public void goToL2() {
