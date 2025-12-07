@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Pivot;
@@ -36,6 +37,7 @@ public class RobotContainer {
   private final Wrist wrist = new Wrist();
   private final Pivot pivot = new Pivot();
   private final Elevator elevator = new Elevator();
+  private final Claw claw = new Claw();
 
   boolean isIntaking = false;
 
@@ -81,15 +83,17 @@ public class RobotContainer {
     // }));
 
     // use left bumper for intake and hold
-    joystick.leftBumper().whileTrue(Commands.runOnce(RobotContainer.this::goToIntake));
-    joystick.leftBumper().whileFalse(Commands.runOnce(RobotContainer.this::goToHold));
-    joystick.leftBumper().onTrue(Commands.runOnce(() -> isIntaking = true));
+    joystick.leftBumper().onTrue(Commands.runOnce(RobotContainer.this::goToIntake));
 
+    joystick.leftBumper().onFalse(Commands.runOnce(RobotContainer.this::goToHold));
+
+    joystick.rightBumper().onFalse(Commands.runOnce(() -> claw.outtake()));
+    
     // use a, b, x and y for l1, l2, l3 and l4 scoring respectively 
     joystick.a().onTrue(Commands.runOnce(RobotContainer.this::moveL1));
     joystick.b().onTrue(Commands.runOnce(RobotContainer.this::moveL2));
     joystick.x().onTrue(Commands.runOnce(RobotContainer.this::moveL3));
-    joystick.y().onTrue(Commands.runOnce(RobotContainer.this::moveL3));
+    joystick.y().onTrue(Commands.runOnce(RobotContainer.this::moveL4));
   }
 
   /**
@@ -103,19 +107,17 @@ public class RobotContainer {
   }
 
   public void goToIntake() {
-    if (isIntaking) {
-      wrist.setWristPosition(0);
-      pivot.setPivotPosition(Degrees.of(0));
-      elevator.setElevatorPosition(0.2);
-    }
+    wrist.setWristPosition(0);
+    pivot.setPivotPosition(Degrees.of(0));
+    elevator.setElevatorPosition(0.2);
+    claw.intake();
   }
 
   public void goToHold() {
-    if (isIntaking) {
-      wrist.setWristPosition(0);
-      pivot.setPivotPosition(Degrees.of(75));
-      elevator.setElevatorPosition(0.2);
-    }
+    wrist.setWristPosition(0);
+    pivot.setPivotPosition(Degrees.of(75));
+    elevator.setElevatorPosition(0.2);
+    claw.stop();
   }
   public void moveL1() {
     wrist.setWristPosition(0.5);
@@ -142,6 +144,4 @@ public class RobotContainer {
     elevator.setElevatorPosition(0.9);
 
   }
-
-  
 }
