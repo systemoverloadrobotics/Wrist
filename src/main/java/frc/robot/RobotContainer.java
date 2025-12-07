@@ -139,7 +139,8 @@ public class RobotContainer {
       wrist.setWristPosition(90);
       pivot.setPivotPosition(Degrees.of(75));
       elevator.setElevatorPosition(1);
-  }
+    }
+
   }
 }
 
