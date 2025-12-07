@@ -38,4 +38,9 @@ public final class Constants {
     public static final int CANcoderId = 19;
     public static final int supplyCurrentLimit = 10;
   }
+  public static class Claw {
+    public static final int motorId = -1;
+    public static final int CANcoderId = -1;
+    public static final int supplyCurrentLimit = -1;
+  }
 }
