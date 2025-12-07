@@ -53,4 +53,11 @@ public final class Constants {
     public static final double kD = 0;
     public static final double sensorToMechanismRatio = 12;
   }
+
+  public static class Claw{
+    public static final int clawMotorId = 10;
+
+    public static final double supplyCurrentLimit = 20.0;
+
+  }
 }

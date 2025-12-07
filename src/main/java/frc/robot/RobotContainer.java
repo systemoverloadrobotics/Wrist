@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.Claw;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -38,6 +39,7 @@ public class RobotContainer {
   private final Wrist wrist = new Wrist();
   private final Pivot pivot = new Pivot();
   private final Elevator elevator = new Elevator();
+  private final Claw claw = new Claw();
 
   boolean isIntaking = false;
 
@@ -86,7 +88,12 @@ public class RobotContainer {
 
     joystick.a().whileFalse(Commands.runOnce(RobotContainer.this::goToHold));
 
-    joystick.a().onTrue(Commands.runOnce(RobotContainer.this::L3));
+    joystick.b().onTrue(Commands.runOnce(RobotContainer.this::L1));
+    
+    joystick.x().onTrue(Commands.runOnce(RobotContainer.this::L3));
+
+    joystick.y().onTrue(Commands.runOnce(RobotContainer.this::claw));
+
 
     joystick.a().onTrue(Commands.runOnce(() -> {
       isIntaking = true;
@@ -124,15 +131,33 @@ public class RobotContainer {
     
     }
   }
+  public void L1(){
+    isIntaking = false;
+    wrist.setWristPosition(0);
+    pivot.setPivotPosition(0);
+    elevator.setElevatorPosition(1.5);
+
+
+  }
 
   public void L3(){
     isIntaking = false;
-    wrist.setWristPosition(90);
-    pivot.setPivotPosition(70);
+    wrist.setWristPosition(0.5);
+    pivot.setPivotPosition(0.25);
     elevator.setElevatorPosition(3);
 
 
   }
+
+  public void claw(){
+    isIntaking = false;
+    wrist.setWristPosition(0.5);
+    pivot.setPivotPosition(0.25);
+    elevator.setElevatorPosition(3);
+    claw.setClawSpeed(5.0);
+
+  }
+  
 
 
   
