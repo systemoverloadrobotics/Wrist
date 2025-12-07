@@ -4,12 +4,14 @@
 
 package frc.robot;
 
+
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 
 import static edu.wpi.first.units.Units.Degrees;
@@ -38,6 +40,7 @@ public class RobotContainer {
   private final Wrist wrist = new Wrist();
   private final Pivot pivot = new Pivot();
   private final Elevator elevator = new Elevator();
+  private final Claw claw = new Claw();
 
   boolean isIntaking = false;
 
@@ -116,6 +119,7 @@ public class RobotContainer {
       wrist.setWristPosition(0);
       pivot.setPivotPosition(Degrees.of(0));
       elevator.setElevatorPosition(0.2);
+      claw.setSpeed(0.5);
     }
   }
 
