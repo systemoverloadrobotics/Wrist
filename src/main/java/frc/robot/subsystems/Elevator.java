@@ -13,6 +13,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.controls.Follower;
@@ -43,7 +44,11 @@ public class Elevator extends SubsystemBase {
         slot0Configs
                 .withKP(Constants.Elevator.kP) // Adjusts time it takes to reach goal
                 .withKI(Constants.Elevator.kI) // Fixes issue with kP not reaching goal because of equally opposing forces
-                .withKD(Constants.Elevator.kD); // If overshoots because of kI, add kD
+                .withKD(Constants.Elevator.kD) // If overshoots because of kI, add kD
+                .withKA(Constants.Elevator.ELEVATOR_KA)
+                .withKV(Constants.Elevator.ELEVATOR_KV)
+                .withKG(Constants.Elevator.ELEVATOR_KG)
+                .withGravityType(GravityTypeValue.Elevator_Static);
 
         // slot0Configs.kP = 10;
         var leftMotorMOC = new MotorOutputConfigs()
@@ -68,9 +73,13 @@ public class Elevator extends SubsystemBase {
 
         // Configuration for Motor 2 (Follower)
         TalonFXConfiguration rightElevatorConfig = new TalonFXConfiguration()
+                .withFeedback(new FeedbackConfigs()
+                        .withSensorToMechanismRatio(Constants.Elevator.sensorToMechanismRatio)
+                        .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor))
                 .withCurrentLimits(new CurrentLimitsConfigs()
                         .withSupplyCurrentLimitEnable(true)
                         .withSupplyCurrentLimit(Constants.Elevator.supplyCurrentLimit))
+                .withSlot0(slot0Configs)
                 .withMotorOutput(rightMotorMOC);
 
         leftMotor.getConfigurator().apply(leftElevatorConfig);
@@ -82,7 +91,8 @@ public class Elevator extends SubsystemBase {
         // Absolute encoder position -> internal encoder for elevator
         // Set initial position from absolute encoder
         leftMotor.setPosition(0);
-        rightMotor.setPosition(leftMotor.getPosition().getValueAsDouble());
+        // rightMotor.setPosition(leftMotor.getPosition().getValue());
+        rightMotor.setPosition(0);
     }
 
     public void setElevatorPosition(double position) {

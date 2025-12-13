@@ -36,7 +36,7 @@ public final class Constants {
     public static final int pivotId = 12;
     // public static final int CANcoderId = -1;
     public static final int encoderChannel = 5;
-    public static final double pivotOfffset =  -0.4568;
+    public static final double pivotOffset = -0.48;
     public static final double kP = 15;
     public static final double kI = 0;
     public static final double kD = 0.5;
@@ -51,6 +51,10 @@ public final class Constants {
     public static final double kP = 15;
     public static final double kI = 0;
     public static final double kD = 0;
+
+    public static final double ELEVATOR_KG = 0.0; // 0.33
+    public static final double ELEVATOR_KV = 0.0; // 1.52
+    public static final double ELEVATOR_KA = 0.0; // 0.84937
     public static final double sensorToMechanismRatio = 12;
   }
 }

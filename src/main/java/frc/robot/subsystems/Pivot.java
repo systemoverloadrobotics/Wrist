@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -70,7 +72,17 @@ public class Pivot extends SubsystemBase {
     // pivotCANcoder.getConfigurator().apply(pivotCANcoderConfig);
     // Absolute encoder position -> internal encoder for wrist
     // pivotMotor.setPosition(pivotCANcoder.getAbsolutePosition().getValueAsDouble());
-    pivotMotor.setPosition(pivotEncoder.get() + Constants.Pivot.pivotOfffset);
+    // pivotMotor.setPosition(pivotEncoder.get() + Constants.Pivot.pivotOffset);
+    pivotMotor.setPosition(getPivotAngle());
+  }
+
+  public Angle getPivotAngle() {
+    return Rotation.of(pivotEncoder.get() + Constants.Pivot.pivotOffset);
+  }
+
+  @Override
+  public void periodic() {
+        pivotMotor.setPosition(getPivotAngle());
   }
     
   public void setPivotPosition(double position) {

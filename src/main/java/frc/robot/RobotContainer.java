@@ -13,16 +13,21 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Elevator;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotation;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 
@@ -39,25 +44,31 @@ public class RobotContainer {
   private final Pivot pivot = new Pivot();
   private final Elevator elevator = new Elevator();
 
-  boolean isIntaking = false;
+  boolean isIntaking = true;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController joystick =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController joystick = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
@@ -65,7 +76,8 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
+    // pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
@@ -75,11 +87,11 @@ public class RobotContainer {
     // whileFalse = key not held
 
     // joystick.b().onTrue(Commands.runOnce(() -> {
-    //   wrist.setWristPosition(0.25); // Set to 90 degrees from the origin
+    // wrist.setWristPosition(0.25); // Set to 90 degrees from the origin
     // }));
 
     // joystick.a().onTrue(Commands.runOnce(() -> {
-    //   wrist.setWristPosition(0.0); // Set to 0 degrees from the origin
+    // wrist.setWristPosition(0.0); // Set to 0 degrees from the origin
     // }));
 
     joystick.a().whileTrue(Commands.runOnce(RobotContainer.this::goToIntake));
@@ -92,6 +104,7 @@ public class RobotContainer {
 
     joystick.b().onTrue(Commands.runOnce(RobotContainer.this::goToL1));
 
+    goToHold();
   }
 
   /**
@@ -107,31 +120,38 @@ public class RobotContainer {
   public void goToL2() {
     isIntaking = false;
     elevator.setElevatorPosition(3);
-    pivot.setPivotPosition(Degrees.of(45));
+    // pivot.setPivotPosition(Degrees.of(45));
+    pivot.setPivotPosition(0.27);
     wrist.setWristPosition(0.5);
 
   }
 
   public void goToL1() {
     isIntaking = false;
-    elevator.setElevatorPosition(2);
-    pivot.setPivotPosition(Degrees.of(10));
+    elevator.setElevatorPosition(1.0);
+    // pivot.setPivotPosition(Degrees.of(35));
+    pivot.setPivotPosition(0.1);
     wrist.setWristPosition(0);
   }
 
   public void goToIntake() {
     if (isIntaking) {
       wrist.setWristPosition(0);
-      pivot.setPivotPosition(Degrees.of(0));
+      // pivot.setPivotPosition(Degrees.of(0));
+      pivot.setPivotPosition(0.0);
       elevator.setElevatorPosition(0.2);
     }
   }
 
   public void goToHold() {
     if (isIntaking) {
-      wrist.setWristPosition(0);
-      pivot.setPivotPosition(Degrees.of(75));
-      elevator.setElevatorPosition(0.2);
+      System.out.println(pivot.getPivotAngle());
+      wrist.setWristPosition(Angle.ofRelativeUnits(0, Rotation));
+      // pivot.setPivotPosition(Degrees.of(75));
+      // pivot.setPivotPosition(Angle.ofRelativeUnits(0.35, Rotation));
+      // pivot.setPivotPosition(Angle.ofRelativeUnits(0.25, Rotation));
+      pivot.setPivotPosition(0.25);
+      elevator.setElevatorPosition(Angle.ofRelativeUnits(0.1, Rotation));
     }
   }
 }
